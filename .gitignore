@@ -1,0 +1,13 @@
+/target/
+/bin/
+.classpath
+.project
+.settings/
+.springBeans
+mqjms.log.*
+sonar-project.properties
+.idea/
+*.iml
+.DS_Store
+.factorypath
+src/test/resources/logs/
