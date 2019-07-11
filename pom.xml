@@ -16,11 +16,79 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
+                    </argLine>
+                    <systemPropertyVariables>
+                        <java.util.logging.config.file>logging.properties</java.util.logging.config.file>
+                        <coverage-outputDir>target/coverage</coverage-outputDir>
+                        <coverage-output>html</coverage-output>
+                        <coverage-metrics>all</coverage-metrics>
+                        <coverage-check>85</coverage-check>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-tests</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Never skip running the tests when the test phase is invoked -->
+                            <skip>false</skip>
+                            <testFailureIgnore>true</testFailureIgnore>
+                            <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+                            <testClassesDirectory>${project.build.directory}/test-classes</testClassesDirectory>
+
+                            <systemPropertyVariables>
+                                <net.sourceforge.cobertura.datafile>target/cobertura/cobertura.ser
+                                </net.sourceforge.cobertura.datafile>
+                            </systemPropertyVariables>
+                            <includes>
+                                <include>**/*Test.java</include>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <!--                            <excludes>-->
+                            <!--                                &lt;!&ndash; Exclude integration tests within (unit) test phase. &ndash;&gt;-->
+                            <!--                                <exclude>**/*IT.java</exclude>-->
+                            <!--                            </excludes>-->
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>integration-tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Never skip running the tests when the integration-test phase
+                                is invoked -->
+                            <skip>true</skip>
+                            <testFailureIgnore>true</testFailureIgnore>
+                            <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+                            <testClassesDirectory>${project.build.directory}/test-classes</testClassesDirectory>
+                            <systemPropertyVariables>
+                                <net.sourceforge.cobertura.datafile>target/cobertura/cobertura.ser
+                                </net.sourceforge.cobertura.datafile>
+                            </systemPropertyVariables>
+                            <includes>
+                                <!-- Include integration tests within integration-test phase. -->
+                                <include>**/*IT.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <properties>
-        <jmockit.version>1.47</jmockit.version>
+        <jmockit.version>1.42</jmockit.version>
     </properties>
 
     <dependencies>
